@@ -1,11 +1,12 @@
 pipeline {
     agent any
 
+
     stages {
-        stage('Checkout Code') {
+        stage('Clone Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/hellohi19832011/dev.git'
+                    url: 'https://github.com/MamthaKSunilkumar/CS8_demo.git'
             }
         }
 
