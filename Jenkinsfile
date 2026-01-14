@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS-18'
+        nodejs 'NodeJS-20'
     }
 
     stages {
-        stage('Clone Code') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/MamthaKSunilkumar/CS8_demo.git'
+                    url: 'https://github.com/hellohi19832011/dev.git'
             }
         }
 
