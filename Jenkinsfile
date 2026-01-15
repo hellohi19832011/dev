@@ -39,9 +39,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "react-app"
-        CONTAINER_NAME = "my-container"
-    }
+    IMAGE_NAME = "react-app"
+    CONTAINER_NAME = "my-container"
+    PATH = "/Applications/Docker.app/Contents/Resources/bin:${env.PATH}"
+}
+
 
     stages {
 
