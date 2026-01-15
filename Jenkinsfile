@@ -35,7 +35,6 @@
 //         }
 //     }
 // }
-
 pipeline {
     agent any
 
@@ -55,13 +54,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                bat '''
+                sh '''
                 docker stop $CONTAINER_NAME || true
                 docker rm $CONTAINER_NAME || true
                 '''
@@ -70,7 +69,7 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                bat '''
+                sh '''
                 docker run -d \
                 -p 5173:5173 \
                 --name $CONTAINER_NAME \
