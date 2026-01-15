@@ -1,37 +1,91 @@
+// pipeline {
+//     agent any
+
+//     tools {
+//         nodejs 'NodeJS-22'
+//     }
+
+//     stages {
+//         stage('Checkout Code') {
+//             steps {
+//                 git branch: 'main',
+//                     url: 'https://github.com/hellohi19832011/dev.git'
+//             }
+//         }
+
+//         stage('Install Dependencies') {
+//             steps {
+//                 sh 'npm install'
+//             }
+//         }
+
+//         stage('Build React App') {
+//             steps {
+//                 sh 'npm run build'
+//             }
+//         }
+//     }
+
+//     post {
+//         success {
+//             echo 'React build successful 🎉'
+//         }
+//         failure {
+//             echo 'Build failed ❌'
+//         }
+//     }
+// }
+
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS-22'
+    environment {
+        IMAGE_NAME = "react-app"
+        CONTAINER_NAME = "my-container"
     }
 
     stages {
-        stage('Checkout Code') {
+
+        stage('Clone Code') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/hellohi19832011/dev.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build Docker Image') {
             steps {
-                sh 'npm install'
+                bat 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        stage('Build React App') {
+        stage('Stop Old Container') {
             steps {
-                sh 'npm run build'
+                bat '''
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                '''
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                bat '''
+                docker run -d \
+                -p 5173:5173 \
+                --name $CONTAINER_NAME \
+                $IMAGE_NAME
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'React build successful 🎉'
+            echo 'React app deployed using Docker successfully 🎉'
         }
         failure {
-            echo 'Build failed ❌'
+            echo 'Deployment failed ❌'
         }
     }
 }
